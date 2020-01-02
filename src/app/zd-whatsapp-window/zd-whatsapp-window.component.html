@@ -1,0 +1,58 @@
+<div id="content" class="p-0" style="width: 865px;">
+    <div class="row" style="height: 710px; padding-left: 15px;">
+        <div class="col-5 p-0">
+            <div class="p-1 waHead row m-0">
+                <div class="col-2">
+                    <div class="avatar user-image"></div>
+                </div>
+                <div class="col-10 pt-2 agent-name">Nombre Agente </div>
+            </div>
+            <div class="chatWdw">
+                <app-conversations [agentId]="agentId" (reloadTkt)="reloadChat($event)" (setTicket)="chgConv($event)"></app-conversations>
+            </div>
+        </div>
+        <div class="col-7 p-0 conversation">
+            <div class="p-1 waHead row m-0">
+                <div class="col-2">
+                    <div class="avatar client-image"></div>
+                </div>
+                <div class="col-7 pt-2">
+                    <p class="text-truncate">{{ _chat.requester }}</p>
+                    <p style="margin-top: -25px; font-size: smaller;"><small>{{ _chat.phone }}</small></p>
+                </div>
+                <div class="col-3" *ngIf="_chat.requester != 'Nombre Cliente'">
+                    <button mat-icon-button color="primary" data-toggle="modal" data-target="#userInfo">
+                        <mat-icon>info</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" (click)="closeTkt()">
+                        <mat-icon>work_off</mat-icon>
+                    </button>
+                </div>
+            </div>
+            <div class="chatWdw">
+                <app-chat-window [ticket]="ticket" [agentId]="agentId" (reload)="reloadConv()"></app-chat-window>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- Modal -->
+<div class="modal fade" id="userInfo" tabindex="-1" role="dialog" aria-labelledby="userInfoLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="userInfoLabel">Información del Usuario</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
