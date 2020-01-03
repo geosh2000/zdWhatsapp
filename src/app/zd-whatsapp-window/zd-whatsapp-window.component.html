@@ -21,7 +21,7 @@
                     <p style="margin-top: -25px; font-size: smaller;"><small>{{ _chat.phone }}</small></p>
                 </div>
                 <div class="col-3" *ngIf="_chat.requester != 'Nombre Cliente'">
-                    <button mat-icon-button color="primary" data-toggle="modal" data-target="#userInfo">
+                    <button mat-icon-button color="primary" (click)="getUserInfo(_chat.rqId)" data-toggle="modal" data-target="#userInfo">
                         <mat-icon>info</mat-icon>
                     </button>
                     <button mat-icon-button color="warn" (click)="closeTkt()">
@@ -46,12 +46,72 @@
             <span aria-hidden="true">&times;</span>
           </button>
             </div>
-            <div class="modal-body">
-                ...
+            <div class="modal-body container d-flex justify-content-center" *ngIf="loading['userInfo'] || loading['savingUI']">
+                <mat-spinner></mat-spinner>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+            <div class="modal-body" *ngIf="!loading['userInfo'] && !loading['savingUI']">
+                <div class="text-center p-2">
+                    <mat-form-field style="width: 80%">
+                        <input matInput [(ngModel)]="userInfo['name']" placeholder="Nombre" #name>
+                    </mat-form-field>
+                    <ng-container *ngIf="loading['name']">
+                        <span><i class="text-primary fas fa-spinner fa-pulse"></i></span>
+                    </ng-container>
+                    <ng-container *ngIf="!loading['name']">
+                        <button mat-icon-button color="accent" (click)="userInfo['name'] = originalUserInfo['name']" *ngIf="originalUserInfo['name'] != userInfo['name']">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                        <button mat-icon-button color="primary" (click)="saveUserInfo('name')" *ngIf="originalUserInfo['name'] != userInfo['name']">
+                            <mat-icon>save</mat-icon>
+                        </button>
+                    </ng-container>
+                    <br>
+                    <mat-form-field style="width: 80%">
+                        <input matInput [(ngModel)]="userInfo['email']" placeholder="Correo" #email>
+                    </mat-form-field>
+                    <ng-container *ngIf="loading['email']">
+                        <span><i class="text-primary fas fa-spinner fa-pulse"></i></span>
+                    </ng-container>
+                    <ng-container *ngIf="!loading['email']">
+                        <button mat-icon-button color="accent" (click)="userInfo['email'] = originalUserInfo['email']" *ngIf="originalUserInfo['email'] != userInfo['email']">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                        <button mat-icon-button color="primary" (click)="saveUserInfo('email')" *ngIf="originalUserInfo['email'] != userInfo['email']">
+                            <mat-icon>save</mat-icon>
+                        </button>
+                    </ng-container>
+                    <br>
+                    <mat-form-field style="width: 80%">
+                        <input matInput [(ngModel)]="userInfo['phone']" placeholder="Teléfono" #phone>
+                    </mat-form-field>
+                    <ng-container *ngIf="loading['phone_number']">
+                        <span><i class="text-primary fas fa-spinner fa-pulse"></i></span>
+                    </ng-container>
+                    <ng-container *ngIf="!loading['phone_number']">
+                        <button mat-icon-button color="accent" (click)="userInfo['phone'] = originalUserInfo['phone']" *ngIf="originalUserInfo['phone'] != userInfo['phone']">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                        <button mat-icon-button color="primary" (click)="saveUserInfo('phone_number')" *ngIf="originalUserInfo['phone'] != userInfo['phone']">
+                            <mat-icon>save</mat-icon>
+                        </button>
+                    </ng-container>
+                    <br>
+                    <mat-form-field style="width: 80%">
+                        <input matInput [(ngModel)]="userInfo['whatsapp']" placeholder="Whatsapp" #whatsapp>
+                    </mat-form-field>
+                    <ng-container *ngIf="loading['whatsapp']">
+                        <span><i class="text-primary fas fa-spinner fa-pulse"></i></span>
+                    </ng-container>
+                    <ng-container *ngIf="!loading['whatsapp']">
+                        <button mat-icon-button color="accent" (click)="userInfo['whatsapp'] = originalUserInfo['whatsapp']" *ngIf="originalUserInfo['whatsapp'] != userInfo['whatsapp']">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                        <button mat-icon-button color="primary" (click)="saveUserInfo('whatsapp')" *ngIf="originalUserInfo['whatsapp'] != userInfo['whatsapp']">
+                            <mat-icon>save</mat-icon>
+                        </button>
+                    </ng-container>
+
+                </div>
             </div>
         </div>
     </div>

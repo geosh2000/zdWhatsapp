@@ -23,6 +23,8 @@ export class ZdWhatsappWindowComponent implements OnInit, OnDestroy {
   loading:Object = {}
   agent:Object = {}
   timeout:any
+  userInfo = {}
+  originalUserInfo = {}
 
   constructor(public _api: ApiService,
               public _init: InitService,
@@ -87,7 +89,7 @@ export class ZdWhatsappWindowComponent implements OnInit, OnDestroy {
   closeTkt( tkt = this.ticket  ){
     this._chat.loading['reading'] = true;
     this.loading['closing'] = true;
-
+    
     this._api.restfulGet( tkt, 'Whatsapp/solve' )
                 .subscribe( res => {
 
@@ -123,6 +125,60 @@ export class ZdWhatsappWindowComponent implements OnInit, OnDestroy {
     this.ticket = tkt
     clearTimeout(this._chat.timeout)
     this._chat.getConv(tkt)
+  }
+
+  getUserInfo( zdId = this._chat.rqId ){
+    this.loading['userInfo'] = true;
+    this.userInfo = {}
+    this.originalUserInfo = {}
+
+    this._api.restfulGet( zdId, 'Calls/showUser' )
+                .subscribe( res => {
+
+                  this.loading['userInfo'] = false;
+                  this.userInfo['name'] = res['data']['data']['user']['name']
+                  this.userInfo['email'] = res['data']['data']['user']['email']
+                  this.userInfo['phone'] = res['data']['data']['user']['phone']
+                  this.userInfo['rqId'] = zdId
+
+                  if( res['data']['data']['user']['user_fields'] && res['data']['data']['user']['user_fields'] ){
+                    this.userInfo['whatsapp'] = res['data']['data']['user']['user_fields']['whatsapp'] ? res['data']['data']['user']['user_fields']['whatsapp'] : ''
+                  }else{
+                    this.userInfo['whatsapp'] = ''
+                  }
+
+                  this.originalUserInfo = JSON.parse(JSON.stringify(this.userInfo))
+
+
+                }, err => {
+                  this._chat.loading['reading'] = false;
+                  this.loading['userInfo'] = false;
+
+                  const error = err.error;
+                  this.toastr.error( error.msg, err.status );
+                  console.error(err.statusText, error.msg);
+
+                });
+  }
+
+  saveUserInfo(f){
+    this.loading['savingUI'] = true;
+
+    this._api.restfulPut( {values: this.userInfo, field: f}, 'Calls/updateUserV2' )
+                .subscribe( res => {
+
+                  this.loading['savingUI'] = false;
+                  this.getUserInfo()
+
+                }, err => {
+                  this._chat.loading['reading'] = false;
+                  this.loading['savingUI'] = false;
+
+                  const error = err.error;
+                  this.toastr.error( error.msg, err.status );
+                  console.error(err.statusText, error.msg);
+
+                });
   }
 
 }

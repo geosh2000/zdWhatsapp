@@ -33,6 +33,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
   timeout:any
   requester:any = 'Nombre Cliente'
   phone:any = ''
+  rqId = 0
 
   constructor(public _api: ApiService,
               public _init: InitService,
@@ -82,6 +83,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy {
                   this.loaded = true
                   this.requester = res['data'][0]['reqName']
                   this.phone = res['data'][0]['reqPhone']
+                  this.rqId = res['data'][0]['zdId']
                   let url = 'https://material.angular.io/assets/img/examples/shiba1.jpg'
                   jQuery('.client-image').css('background-image', 'url(' + url + ')');
 
